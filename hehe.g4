@@ -17,15 +17,21 @@ exp : number | 'false' | 'true' | var | exp operatorComparison exp | exp operato
 
 varOrExp : var | exp ;
 
-st : set_st | if_st | silently_st | AnyString;
+st : set_st | if_st | silently_st | choice_st | select_st | string_st | callFunction;
+
+//字符串表达式，用来显示字符串
+string_st : AnyString;
 
 // <<set $toldname = 0>> set表达式用来给变量赋值
 set_st : '<<set' var assignmentOperator exp '>>' ;
 
-if_st : '<<' 'if' exp '>>' st* ('<<elseif' exp '>>')* ('<<else>>' st*)? '<<endif>>' ;
+if_st : '<<if' exp '>>' st* ('<<elseif' exp '>>')* st* ('<<else>>' st*)? '<<endif>>' ;
 
 //choice_st
-choice_st : '<<choice' '[[' AnyString DoFunc ']]' '>>' ;
+choice_st : '<<choice' callFunction '>>' ;
+
+//select_st
+select_st : choice_st '|' choice_st ;
 
 // <<silently>>  <<endsilently>> 在中间的代码都不会影响显示, 目前只用来赋值
 silently_st : Silently set_st* EndSilently ;
@@ -33,8 +39,7 @@ silently_st : Silently set_st* EndSilently ;
 // function主要用来显示和跳转
 function : FuncDec Label st* ;
 
-//调用匿名函数
-showAll: ShowAll ; //单独显示字符串
+//调用函数
 callFunction : '[[' Label ']]' | '[[' DelayTime DoFunc ']]' | '[[' AnyString DoFunc ']]' ;
 
  
@@ -65,7 +70,7 @@ ShiftLeft:          '<<';
 
 ShiftRight:         '>>';
 
-Label: ('a'..'z' | 'A'..'Z' | '_')  ('a'..'z' | 'A'..'Z' | '0'..'9' | '_' | ' ')*; //首字母不能是数字
+Label: ('a'..'z' | 'A'..'Z' | '_')  ('a'..'z' | 'A'..'Z' | '0'..'9' | '_')*; //首字母不能是数字
 
 VarName: '$' Label ;
 
@@ -108,6 +113,5 @@ LINE_COMMENT : '//' ('\r\n'|'\r'|'\n'|EOF) -> channel(HIDDEN) ;
 
 AnyString: '"' ~('"')* '"' ; 
 
-ShowAll: '[' ~('[' | ']')* ']' ;
 
 WS : [ \t\r\n]+ -> skip ;
