@@ -8,34 +8,42 @@ grammar hehe ;
 assignmentOperator : '=' | '+=' | '-=' ;
 operatorComparison : 'is' | 'gte' ;
 operatorAddSub : '+' | '-' ;
+operatorAndAnd: AndAnd;
+operatorOrOr : OrOr;
+
+operatorOr : Or;
 
 number : Int ;
 
 time : Time ;
 
-bool : 'false' or 'true' ;
+bool : True | False ;
 
 var : VarName ;
 
-exp : number | time | 'false' | 'true' | var | exp operatorComparison exp | exp operatorAddSub exp;
+str : String;
+
+exp : number | str | time | bool | var | exp operatorComparison exp | exp operatorAddSub exp | exp operatorAndAnd exp | exp operatorOrOr exp;
 
 varOrExp : var | exp ;
 
-st : set_st | if_st | silently_st | choice_st | select_st | string_st | callFunction;
+st : set_st | if_st | silently_st | choice_st | select_st | string_st | callFunction ;
 
 //字符串表达式，用来显示字符串
-string_st : AnyString;
+string_st : TEXT;
+
+button_str : TEXT;
 
 // <<set $toldname = 0>> set表达式用来给变量赋值
 set_st : '<<set' var assignmentOperator exp '>>' ;
 
-if_st : '<<if' exp '>>' st* ('<<elseif' exp '>>')* st* ('<<else>>' st*)? '<<endif>>' ;
+if_st : '<<if' exp '>>' st* ('<<elseif' exp '>>' st*)* ('<<else>>' st*)? '<<endif>>' ;
 
 //choice_st
-choice_st : '<<choice' callFunction '>>' ;
+choice_st : ChoiceLeft callFunction '>>' ;
 
 //select_st
-select_st : choice_st '|' choice_st ;
+select_st : choice_st operatorOr choice_st ;
 
 // <<silently>>  <<endsilently>> 在中间的代码都不会影响显示, 目前只用来赋值
 silently_st : Silently set_st* EndSilently ;
@@ -43,11 +51,15 @@ silently_st : Silently set_st* EndSilently ;
 // function主要用来显示和跳转
 function : FuncDec Label st* ;
 
+function_list : function+ ;
+
 then_st : ThenFunc | ThenFunc exp ;
+
+delay_st : Delay Time ;
 
 fun_name : Label ;
 //调用函数
-callFunction : '[[' fun_name ']]' | '[[' fun_name exp ']]' | '[[' fun_name exp then_st']]' | '[[' string_st then_st']]' ;
+callFunction : '[[' fun_name ']]' | '[[' delay_st then_st ']]' | '[[' button_str then_st']]' ;
 
  
 //[通话接入], [[launch]], 前一个我们可以认为是调用了一个匿名函数， 函数体是当中的字符串，后一个我们可以任务是调用了,名为launch的函数
@@ -62,10 +74,6 @@ Minus : '-' ;
 
 Dollar : '$';
 
-OpenSquareBracket:  '[';
-CloseSquareBracket: ']';
-
-
 Assign : '=' ;
 PlusAssign : '+=';
 MinusAssign : '-=';
@@ -77,7 +85,6 @@ ShiftLeft:          '<<';
 
 ShiftRight:         '>>';
 
-Label: ('a'..'z' | 'A'..'Z' | '_')  ('a'..'z' | 'A'..'Z' | '0'..'9' | '_')*; //首字母不能是数字
 
 VarName: '$' Label ;
 
@@ -89,16 +96,25 @@ Gte : 'gte' ;
 
 Set : 'set' ;
 
+
 Silently : '<<silently>>' ;
 EndSilently: '<<endsilently>>' ;
 
 Choice : 'choice' ;
 
+ChoiceLeft : ShiftLeft Choice ;
+
 If : 'if' ;
+
+ElseIf : 'elseif' ;
+
+EndIf : 'endif' ;
 
 Delay : 'delay' ;
 
 AndAnd : 'and' ;
+
+OrOr : 'or' ;
 
 //数字
 fragment
@@ -114,9 +130,15 @@ True : 'true' ;
 
 False : 'false' ;
 
-LINE_COMMENT : '//' ('\r\n'|'\r'|'\n'|EOF) -> channel(HIDDEN) ;
+LINE_COMMENT : '//' () ('\r\n'|'\r'|'\n'|EOF) -> channel(HIDDEN) ;
 
-AnyString: '"' ~('"')* '"' ; 
+String: '"' ~('"')* '"' ; 
+
+Label: ('a'..'z' | 'A' .. 'Z' | '_')  ('a'..'z' | 'A' .. 'Z' | '0'..'9' | '_')*; //首字母不能是数字
+
+TEXT: '#' ~('#')+ '#' ; 
+//TEXT : ~(':' | '|' | '[' |'"'| ']' | '$' | '<' |'='| '-' | '+' | '>' | 'a' .. 'z' | '0'..'9' | '_' | '\r' | '\n')+ ;
+
+WS : [ \t\r\n]+ -> skip;
 
 
-WS : [ \t\r\n]+ -> skip ;
