@@ -1,7 +1,47 @@
-grammar hehe
+grammar hehe ;
+
+//语法分析
+///////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////
+
+//赋值操作符
+assignmentOperator : '=' | '+=' | '-=' ;
+operatorComparison : 'is' | 'gte' ;
+operatorAddSub : '+' | '-' ;
+
+number : Int ;
+
+var : VarName ;
+
+exp : number | 'false' | 'true' | var | exp operatorComparison exp | exp operatorAddSub exp;
+
+varOrExp : var | exp ;
+
+st : set_st | if_st | silently_st | AnyString;
+
+// <<set $toldname = 0>> set表达式用来给变量赋值
+set_st : '<<set' var assignmentOperator exp '>>' ;
+
+if_st : '<<if' exp '>>' st* ('<<elseif' exp '>>')* ('<<else>>' st*)? '<<endif>>' ;
+
+//choice_st
+choice_st : '<<choice' '[[' AnyString DoFunc ']]' ;
+
+// <<silently>>  <<endsilently>> 在中间的代码都不会影响显示, 目前只用来赋值
+silently_st : Silently set_st* EndSilently ;
+
+// function主要用来显示和跳转
+function : FuncDec Label st* ;
+
+//调用匿名函数
+showAll: '[' AnyString ']' ; //单独显示字符串
+callFunction : '[[' Label ']]' | '[[' DelayTime DoFunc ']]' | '[[' AnyString DoFunc ']]' ;
+
+ 
+//[通话接入], [[launch]], 前一个我们可以认为是调用了一个匿名函数， 函数体是当中的字符串，后一个我们可以任务是调用了,名为launch的函数
+
 
 //词法分析
-
 FuncDec : '::' ;
 
 Equal : 'is' ;
@@ -56,7 +96,7 @@ Digit
 
 Time : Int's' | Int 'm' ;
 
-DelayTime = 'delay' Time ;
+DelayTime : 'delay' Time ;
 
 Int : Digit+ ;
 
@@ -64,42 +104,9 @@ True : 'true' ;
 
 False : 'false' ;
 
-Any : .+ ;
+LINE_COMMENT : '//' ('\r\n'|'\r'|'\n'|EOF) -> channel(HIDDEN) ;
 
+WS : [ \t\r\n]+ -> skip ;
 
-//语法分析
-///////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////
+AnyString: ~('\r' | '\n' | '"')* ;
 
-//赋值操作符
-assignmentOperator : '=' | '+=' | '-=' ;
-operatorComparison : 'is' | 'gte' ;
-
-number : Int ;
-
-var : VarName ;
-
-exp : number | 'false' | 'true' ;
-
-varOrExp : var | exp ;
-
-set_st : '<<set ' var assignmentOperator exp '>>' ;
-
-if_st : '<<if ' varOrExp operatorComparison exp '>>' ;
-
-silently_st : Silently set_st* EndSilently ;
-
-// function主要用来显示和跳转
-
-//调用匿名函数
-showAll: '[' Any ']' ;
-callFunction : '[[' Label ']]' | '[[' DelayTime DoFunc ']]' | '[[' Any DoFunc ']]' ;
-
-//choice_st
-
-// <<silently>>  <<endsilently>> 在中间的代码都不会影响显示, 目前只用来赋值
-
-
-// <<set $toldname = 0>> set表达式用来给变量赋值
- 
-//[通话接入], [[launch]], 前一个我们可以认为是调用了一个匿名函数， 函数体是当中的字符串，后一个我们可以任务是调用了,名为launch的函数
