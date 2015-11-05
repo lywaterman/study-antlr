@@ -22,7 +22,7 @@ st : set_st | if_st | silently_st | AnyString;
 // <<set $toldname = 0>> set表达式用来给变量赋值
 set_st : '<<set' var assignmentOperator exp '>>' ;
 
-if_st : '<<if' exp '>>' st* ('<<elseif' exp '>>')* ('<<else>>' st*)? '<<endif>>' ;
+if_st : '<<' 'if' exp '>>' st* ('<<elseif' exp '>>')* ('<<else>>' st*)? '<<endif>>' ;
 
 //choice_st
 choice_st : '<<choice' '[[' AnyString DoFunc ']]' ;
@@ -34,7 +34,7 @@ silently_st : Silently set_st* EndSilently ;
 function : FuncDec Label st* ;
 
 //调用匿名函数
-showAll: '[' AnyString ']' ; //单独显示字符串
+showAll: ShowAll ; //单独显示字符串
 callFunction : '[[' Label ']]' | '[[' DelayTime DoFunc ']]' | '[[' AnyString DoFunc ']]' ;
 
  
@@ -65,7 +65,7 @@ ShiftLeft:          '<<';
 
 ShiftRight:         '>>';
 
-Label: ('a'..'z' | 'A'..'Z' | '_')  ('a'..'z' | 'A'..'Z' | '0'..'9' | '_')*; //首字母不能是数字
+Label: ('a'..'z' | 'A'..'Z' | '_')  ('a'..'z' | 'A'..'Z' | '0'..'9' | '_' | ' ')*; //首字母不能是数字
 
 VarName: '$' Label ;
 
@@ -106,7 +106,8 @@ False : 'false' ;
 
 LINE_COMMENT : '//' ('\r\n'|'\r'|'\n'|EOF) -> channel(HIDDEN) ;
 
+AnyString: '"' ~('"')* '"' ; 
+
+ShowAll: '[' ~('[' | ']')* ']' ;
+
 WS : [ \t\r\n]+ -> skip ;
-
-AnyString: ~('\r' | '\n' | '"')* ;
-
