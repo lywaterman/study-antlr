@@ -11,9 +11,13 @@ operatorAddSub : '+' | '-' ;
 
 number : Int ;
 
+time : Time ;
+
+bool : 'false' or 'true' ;
+
 var : VarName ;
 
-exp : number | 'false' | 'true' | var | exp operatorComparison exp | exp operatorAddSub exp;
+exp : number | time | 'false' | 'true' | var | exp operatorComparison exp | exp operatorAddSub exp;
 
 varOrExp : var | exp ;
 
@@ -39,8 +43,11 @@ silently_st : Silently set_st* EndSilently ;
 // function主要用来显示和跳转
 function : FuncDec Label st* ;
 
+then_st : ThenFunc | ThenFunc exp ;
+
+fun_name : Label ;
 //调用函数
-callFunction : '[[' Label ']]' | '[[' DelayTime DoFunc ']]' | '[[' AnyString DoFunc ']]' ;
+callFunction : '[[' fun_name ']]' | '[[' fun_name exp ']]' | '[[' fun_name exp then_st']]' | '[[' string_st then_st']]' ;
 
  
 //[通话接入], [[launch]], 前一个我们可以认为是调用了一个匿名函数， 函数体是当中的字符串，后一个我们可以任务是调用了,名为launch的函数
@@ -74,7 +81,7 @@ Label: ('a'..'z' | 'A'..'Z' | '_')  ('a'..'z' | 'A'..'Z' | '0'..'9' | '_')*; //�
 
 VarName: '$' Label ;
 
-DoFunc: Or Label ;   //在函数体里面如果接受到click时间，那么执行已Label为名字的函数
+ThenFunc: Or Label ;   //在函数体里面如果接受到click时间，那么执行已Label为名字的函数
 
 Or : '|' ;
 
@@ -99,9 +106,7 @@ Digit
     : [0-9]
     ;
 
-Time : Int's' | Int 'm' ;
-
-DelayTime : 'delay' Time ;
+Time : Int's' | Int'm' ;
 
 Int : Digit+ ;
 
