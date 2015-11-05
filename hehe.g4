@@ -25,7 +25,7 @@ set_st : '<<set' var assignmentOperator exp '>>' ;
 if_st : '<<' 'if' exp '>>' st* ('<<elseif' exp '>>')* ('<<else>>' st*)? '<<endif>>' ;
 
 //choice_st
-choice_st : '<<choice' '[[' AnyString DoFunc ']]' ;
+choice_st : '<<choice' '[[' AnyString DoFunc ']]' '>>' ;
 
 // <<silently>>  <<endsilently>> 在中间的代码都不会影响显示, 目前只用来赋值
 silently_st : Silently set_st* EndSilently ;
