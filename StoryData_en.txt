@@ -50,13 +50,13 @@
 #有人吗？
 这玩意能用吗？
 有人能看到我吗？#
-<<choice [[你是谁呀？|whois]]>> | <<choice [[我能看到你。|messagereceived]]>>
+<<choice [[#你是谁呀？#|whois]]>> | <<choice [[#我能看到你。#|messagereceived]]>>
 
 :: whois
 <<silently>><<set $toldname = 1>><<endsilently>>
-#哦对，抱歉。我不该这么开头的。#
-#我只是看到有人回应我的信号太激动了而已。#
-#我的名字是泰勒。我曾经是...星舰瓦里法号上的一名宇航员。#
+#哦对，抱歉。我不该这么开头的。
+我只是看到有人回应我的信号太激动了而已。
+我的名字是泰勒。我曾经是...星舰瓦里法号上的一名宇航员。#
 <<choice [[#瓦里法号？#|Variainfo]]>> | <<choice [[#“曾经”？后来出什么事了？？#|whathappened]]>>
 
 :: Variainfo
@@ -65,7 +65,7 @@
 距离预定行程结束还有六天的时候。
 不知道怎么回事...我们坠毁在了某颗卫星上。
 我也不知道是哪里。#
-<<choice [[你怎么会不知道呢？|dontknow]]>> | <<choice [[用导航试试啊。|usemap]]>>
+<<choice [[#你怎么会不知道呢？#|dontknow]]>> | <<choice [[#用导航试试啊。#|usemap]]>>
 
 :: dontknow
 <<silently>><<set $toldstudent = 1>><<endsilently>>
@@ -76,7 +76,7 @@
 我在瓦里法的任务就是在老鼠还有地衣之类的东西身上做零-G实验，明白吗？
 我根本无需在没有监督者看管的情况下自己行动。
 所以说我的学生手册里面根本没写过遇上这种坠毁事故我该怎么做才对。#
-<<choice [[好吧好吧。先冷静下。|calmdown]]>> | <<choice [[喔哇。放轻松。|whoatakeiteasy]]>>
+<<choice [[#好吧好吧。先冷静下。#|calmdown]]>> | <<choice [[#喔哇。放轻松。#|whoatakeiteasy]]>>
 
 :: calmdown
 #好吧。抱歉，你大概也能想象到我现在有多抓狂。
@@ -91,25 +91,25 @@
 万一我是唯一的幸存者可怎么办啊？
 哦，天啊，阿亚舰长可能已经死掉了。还有其他人也是。科尔比...见鬼。还有科尔比。
 我只是...万一现在只剩下我可怎么办啊？#
-<<choice [[冷静，先冷静。深呼吸。|justbreathe]]>> | <<choice [[想要谈谈科尔比这个人吗？|talkColby]]>>
+<<choice [[#冷静，先冷静。深呼吸。#|justbreathe]]>> | <<choice [[#想要谈谈科尔比这个人吗？#|talkColby]]>>
 
 :: justbreathe
 #对，你说得对。这里的空气可以呼吸，我不妨深呼吸一下。
 我是说，就像科尔比曾经不止一次地说过的那样：  
 与其把时间浪费在“万一”上，不如抓紧想想现在应该怎么办。。
 所以我们快行动起来吧。#
-<<choice [[好的。你现在在哪儿？|whereareyou]]>> | <<choice [[你受伤了吗？|areyouallright]]>>
+<<choice [[#好的。你现在在哪儿？#|whereareyou]]>> | <<choice [[#你受伤了吗？#|areyouallright]]>>
 
 :: sorryaboutearlier
 #还好。现在压力太大了，人在压力大的情况下会口不择言。
 现在能和人说说话真是太好了，你要是不在的话，我真是不敢想我会做出什么事情来。
 好吧。那，我们就先从我们了解的事情入手。#
-<<choice [[你在哪里？|whereareyou]]>> | <<choice [[你受伤了吗？|areyouallright]]>>
+<<choice [[#你在哪里？#|whereareyou]]>> | <<choice [[#你受伤了吗？#|areyouallright]]>>
 
 :: messagereceived
 #哦，谢天谢地！能联系上别人真是太好啊！
 已经好久了！#
-<<choice [[你是谁？|whois]]>> | <<choice [[发生什么事了？|whathappened]]>>
+<<choice [[#你是谁？#|whois]]>> | <<choice [[#发生什么事了？#|whathappened]]>>
 
 :: whathappened
 #我们的舰船坠毁在某颗卫星上了。但我不知道究竟是哪里。
