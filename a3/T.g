@@ -1,4 +1,4 @@
-grammar hehe ;
+grammar T ;
 
 options {
     language=Cpp;
