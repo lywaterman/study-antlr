@@ -17,17 +17,17 @@ operatorOrOr : OrOr;
 
 operatorOr : Or;
 
-number : Int ;
+number : INT;
 
 time : Time ;
 
-bool : True | False ;
+boolvalue: True | False ;
 
 var : VarName ;
 
 str : String;
 
-exp : number | str | time | bool | var;
+exp : number | str | time | boolvalue | var;
 
 exp_op : exp operatorComparison exp | exp operatorAddSub exp | exp operatorAndAnd exp | exp operatorOrOr exp;
 
@@ -128,15 +128,17 @@ Digit
     : '0'..'9'
     ;
 
-Time : Int's' | Int'm' ;
+Time : INT's' | INT'm' ;
 
-Int : Digit+ ;
+INT : Digit+ ;
 
 True : 'true' ;
 
 False : 'false' ;
 
-LINE_COMMENT : '//' () ('\r\n'|'\r'|'\n'|EOF) {$channel = HIDDEN;} ;
+COMMENT
+    :   '//' ~('\n'|'\r')* '\r'? '\n' {$channel=HIDDEN;}
+    ;
 
 String: '"' ~('"')* '"' ; 
 
