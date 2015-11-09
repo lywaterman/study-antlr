@@ -43,15 +43,18 @@ options {
 //////////////////////////////////////////////////////////////////
 
 //赋值操作符
-assignmentOperator : '=' | '+=' | '-=' ;
+assignmentOperator : Assign | '+=' | '-=' ;
+
 operatorComparison : 'is' | 'gte' ;
 operatorAddSub : '+' | '-' ;
 operatorAndAnd: AndAnd;
 operatorOrOr : OrOr;
 
+operators: operatorComparison | operatorAddSub | operatorAndAnd | operatorOrOr ;
+
 operatorOr : Or;
 
-number : Digit+;
+number : Int;
 
 time : Time ;
 
@@ -65,7 +68,7 @@ exp : number | str | time | boolvalue | var;
 
 exp_op : exp operatorComparison exp | exp operatorAddSub exp | exp operatorAndAnd exp | exp operatorOrOr exp;
 
-exp_or_op : exp | exp_op ;
+exp_or_op : exp (operators exp)* ;
 
 st : set_st | if_st | silently_st | choice_st | select_st | string_st | callFunction ;
 
@@ -157,22 +160,13 @@ AndAnd : 'and' ;
 OrOr : 'or' ;
 
 //数字
-fragment
-Digit
-    : '0'..'9'
-    ;
+Time : Int's' | Int'm' ;
 
-Time : Digit+'s' | Digit+'m' ;
-
-//INT : Digit+ ;
+Int : '0'..'9'+ ;
 
 True : 'true' ;
 
 False : 'false' ;
-
-COMMENT
-    :   '//' ~('\n'|'\r')* '\r'? '\n' {$channel=HIDDEN;}
-    ;
 
 String: '"' ~('"')* '"' ; 
 
@@ -180,6 +174,11 @@ Label: ('a'..'z' | 'A' .. 'Z' | '_')  ('a'..'z' | 'A' .. 'Z' | '0'..'9' | '_')*;
 
 TEXT: '#' ~('#')+ '#' ; 
 
-WS  : (' '|'\r'|'\n')+ {skip();} ;
+COMMENT
+    : '/*' ( options {greedy=false;} : . )* '*/' {$channel=HIDDEN;} ;
 
+LINE_COMMENT
+    : '//' ~('\n'|'\r')* '\r'? '\n' {$channel=HIDDEN;} ;
+
+WS  : (' '|'\r'|'\t'|'\u000C'|'\n') {$channel=HIDDEN;} ;
 
