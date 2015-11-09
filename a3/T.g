@@ -4,6 +4,40 @@ options {
     language=Cpp;
 }
 
+@parser::includes
+{
+   #include "TLexer.hpp"
+}
+
+@lexer::namespace { User }
+@parser::namespace{ User }
+
+@lexer::traits 
+{
+    class TLexer; 
+    class TParser; 
+
+    template<class ImplTraits>
+    class UserTraits : public antlr3::CustomTraitsBase<ImplTraits>
+    {
+    public:
+        //for using the token stream which deleted the tokens, once it is reduced to a rule
+        //but it leaves the start and stop tokens. So they can be accessed as usual
+        static const bool TOKENS_ACCESSED_FROM_OWNING_RULE = true;
+    };
+
+    typedef antlr3::Traits< TLexer, TParser, UserTraits > TLexerTraits;
+    typedef TLexerTraits TParserTraits;
+
+    /* If you don't want the override it is like this.
+       class TLexer;
+       class TParser;
+       typedef antlr3::Traits< TLexer, TParser > TLexerTraits;
+       typedef TLexerTraits TParserTraits;
+     */
+}
+
+
 //语法分析
 ///////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////
