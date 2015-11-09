@@ -17,7 +17,7 @@ operatorOrOr : OrOr;
 
 operatorOr : Or;
 
-number : INT;
+number : Digit+;
 
 time : Time ;
 
@@ -128,9 +128,9 @@ Digit
     : '0'..'9'
     ;
 
-Time : INT's' | INT'm' ;
+Time : Digit+'s' | Digit+'m' ;
 
-INT : Digit+ ;
+//INT : Digit+ ;
 
 True : 'true' ;
 
